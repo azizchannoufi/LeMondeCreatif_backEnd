@@ -1,16 +1,22 @@
 const jwt = require('jsonwebtoken');
+const { Admin } = require('../models');
 
-exports.authMiddleware = (req, res, next) => {
-  const token = req.headers.authorization;
+const authenticateToken = (req, res, next) => {
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+
   if (!token) {
-    return res.status(401).json({ message: 'Accès non autorisé, token manquant' });
+    return res.status(401).json({ message: 'Accès non autorisé. Token manquant.' });
   }
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Ajouter les informations de l'utilisateur dans l'objet req
+  jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: 'Token invalide.' });
+    }
+
+    // Ajout de l'utilisateur décodé dans la requête
+    req.user = user;
     next();
-  } catch (error) {
-    res.status(401).json({ message: 'Token invalide' });
-  }
+  });
 };
+
+module.exports = authenticateToken;

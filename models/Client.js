@@ -1,12 +1,20 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/ConfigDatabase');
 
-const Admin = sequelize.define('Admin', {
+const Client = sequelize.define('Client', {
     id: {
         type: DataTypes.INTEGER,  // Utilisation d'un identifiant de type entier
         primaryKey: true,         // Définir 'id' comme clé primaire
         autoIncrement: true       // Auto-incrémentation de l'ID
       },
+  nom: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  prenom: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -16,15 +24,15 @@ const Admin = sequelize.define('Admin', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  numero: {
-    type: DataTypes.STRING, 
-    allowNull: true
-  },
-  adresseEmailPro: {
+  genre: {
     type: DataTypes.STRING,
     allowNull: true
   },
-  adresse: {
+  age: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  localisation: {
     type: DataTypes.STRING,
     allowNull: true
   }
@@ -32,4 +40,4 @@ const Admin = sequelize.define('Admin', {
   timestamps: true
 });
 
-module.exports = Admin;
+module.exports = Client;
