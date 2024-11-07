@@ -31,14 +31,14 @@ PromoCode.hasMany(Commande, { foreignKey: 'idPromoCode' });
 Commande.belongsTo(PromoCode, { foreignKey: 'idPromoCode' });
 
 // Synchronisation avec la base de données
-// const initConfigDatabase = async () => {
-//   try {
-//     await sequelize.sync({ alter: true }); // force: true pour recréer les tables à chaque exécution (en dev)
-//     console.log("La base de données et les tables ont été créées !");
-//   } catch (error) {
-//     console.error("Erreur lors de la création de la base de données :", error);
-//   }
-// };
+const initConfigDatabase = async () => {
+  try {
+    await sequelize.sync({ alter: true }); // force: true pour recréer les tables à chaque exécution (en dev)
+    console.log("La base de données et les tables ont été créées !");
+  } catch (error) {
+    console.error("Erreur lors de la création de la base de données :", error);
+  }
+};
 
 initConfigDatabase();
 

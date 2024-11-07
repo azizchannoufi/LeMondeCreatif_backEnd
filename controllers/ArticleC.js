@@ -1,4 +1,4 @@
-const { Article } = require('../models/Article');
+const  Article  = require('../models/Article');
 
 // Création d'un article
 const createArticle = async (req, res) => {
@@ -64,4 +64,18 @@ const deleteArticle = async (req, res) => {
   }
 };
 
-module.exports = { createArticle, getArticles, getArticleById, updateArticle, deleteArticle };
+// Récupérer les 6 derniers articles ajoutés
+const getNewArticle = async (req, res) => {
+    try {
+      const articles = await Article.findAll({
+        order: [['id', 'DESC']],
+        limit: 6
+      });
+      res.status(200).json(articles);
+    } catch (error) {
+      res.status(500).json({ message: 'Erreur lors de la récupération des nouveaux articles', error });
+    }
+  };
+
+
+module.exports = { createArticle, getArticles, getArticleById, updateArticle, deleteArticle,getNewArticle };

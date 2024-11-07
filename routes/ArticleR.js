@@ -4,7 +4,8 @@ const {
   getArticles,
   getArticleById,
   updateArticle,
-  deleteArticle
+  deleteArticle,
+  getNewArticle
 } = require('../controllers/ArticleC');
 
 const router = express.Router();
@@ -16,7 +17,10 @@ router.post('/', createArticle);
 router.get('/', getArticles);
 
 // Lire un article par ID
-router.get('/:id', getArticleById);
+router.get('/byid/:id', getArticleById);
+
+// Lire les 6 dernier article
+router.get('/lastArticle',getNewArticle)
 
 // Mettre à jour un article
 router.put('/:id', updateArticle);
