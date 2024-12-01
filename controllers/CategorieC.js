@@ -1,14 +1,21 @@
-const { Categorie } = require('../models/Categorie');
+const  Categorie  = require('../models/Categorie');
 
-// Création d'une catégorie
 const createCategorie = async (req, res) => {
+  const { nom, sousCategories } = req.body;
   try {
-    const categorie = await Categorie.create(req.body);
+    // Créer la catégorie avec les sous-catégories en tant que JSON
+    const categorie = await Categorie.create({
+      nom,
+      sousCategories: sousCategories || [] // Si pas de sous-catégories, tableau vide
+    });
+
     res.status(201).json(categorie);
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la création de la catégorie', error });
+    console.error("Erreur lors de la création de la catégorie", error); // Ajoutez un log détaillé
+    res.status(500).json({ message: 'Erreur lors de la création de la catégorie', error: error.message || error });
   }
 };
+
 
 // Récupérer toutes les catégories
 const getCategories = async (req, res) => {

@@ -10,6 +10,11 @@ const Categorie = sequelize.define('Categorie', {
   nom: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  sousCategories: {
+    type: DataTypes.JSON,  // Utilisation du type JSON pour stocker les sous-catégories
+    allowNull: true,       // Ce champ est optionnel, peut être vide
+    defaultValue: []       // Si pas de sous-catégorie, c'est un tableau vide
   }
 }, {
   timestamps: true

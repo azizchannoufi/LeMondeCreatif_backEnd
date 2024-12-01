@@ -1,5 +1,6 @@
 const sequelize = require('../config/ConfigDatabase');
 const Client = require('./Client');
+const Pack = require('./Pack');
 const Article = require('./Article');
 const Categorie = require('./Categorie');
 const Commande = require('./Commande');
@@ -29,7 +30,16 @@ Article.belongsToMany(Evenement, { through: 'ArticleEvenement', foreignKey: 'idA
 // PromoCode et Commande (Une commande peut utiliser un code promo)
 PromoCode.hasMany(Commande, { foreignKey: 'idPromoCode' });
 Commande.belongsTo(PromoCode, { foreignKey: 'idPromoCode' });
+Pack.hasMany(Article, {
+  foreignKey: 'packId',
+  // as: 'articles' // Alias for accessing articles related to a pack
+});
 
+// Article belongs to one Pack
+Article.belongsTo(Pack, {
+  foreignKey: 'packId',
+  as: 'pack' // Alias for accessing the pack of an article
+});
 // Synchronisation avec la base de données
 const initConfigDatabase = async () => {
   try {
@@ -40,7 +50,7 @@ const initConfigDatabase = async () => {
   }
 };
 
-initConfigDatabase();
+// initConfigDatabase();
 
 module.exports = {
   Client,
@@ -50,5 +60,7 @@ module.exports = {
   ArticleCommande,
   Evenement,
   Admin,
-  PromoCode
+  PromoCode,
+  Pack,
+  initConfigDatabase
 };
