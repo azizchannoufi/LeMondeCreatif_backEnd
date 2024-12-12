@@ -2,14 +2,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const sequelize = require('./config/ConfigDatabase'); // Configuration de la base de données
 const cors = require('cors');
-// const models = require('./models/Relation'); // Import des modèles et des relations
+const models = require('./models/Relation'); // Import des modèles et des relations
 
 const app = express();
 
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' })); // Adjust the size as needed
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Fonction pour initialiser la base de données et démarrer le serveur
 const startServer = async () => {
@@ -25,6 +26,7 @@ const startServer = async () => {
     const adminRoutes = require('./routes/AdminR');
     const promoCodeRoutes = require('./routes/PromoCodeR');
     const evenementRoutes = require('./routes/EvenementR');
+    const remiseRoutes= require ('./routes/RemiseR');
 
     // Utilisation des routes
     app.use('/api/clients', clientRoutes);
@@ -34,7 +36,7 @@ const startServer = async () => {
     app.use('/api/admins', adminRoutes);
     app.use('/api/promocodes', promoCodeRoutes);
     app.use('/api/evenements', evenementRoutes);
-
+    app.use('./api/remise',remiseRoutes)
     // Démarrage du serveur
     const PORT = process.env.PORT || 3002;
     app.listen(PORT, () => {

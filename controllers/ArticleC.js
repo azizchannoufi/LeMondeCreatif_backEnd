@@ -1,5 +1,6 @@
 const  Article  = require('../models/Article');
-
+const Categorie =require('../models/Categorie')
+const ImageArticle = require('../models/ImageArticle')
 // Création d'un article
 const createArticle = async (req, res) => {
   try {
@@ -77,5 +78,45 @@ const getNewArticle = async (req, res) => {
     }
   };
 
+  const getarticlesAdmin = async (req, res) => {
+    try {
+      // Récupérer tous les articles sans inclure directement la catégorie
+      const articles = await Article.findAll();
+  
+      // Pour chaque article, récupérer la catégorie et les images associées
+      const articlesWithDetails = await Promise.all(
+        articles.map(async (article) => {
+          // Récupérer la catégorie associée
+          const categorie = await Categorie.findByPk(article.idCategorie);
+  
+          // Récupérer les images associées
+          const images = await ImageArticle.findAll({
+            where: { articleId: article.id },
+            attributes: ['imageUrl', 'publicId'],
+          });
+  
+          // Retourner l'article avec son nom de catégorie et ses images
+          return {
+            ...article.toJSON(),
+            categorieNom: categorie ? categorie.nom : null, // Nom de la catégorie ou null
+            images: images || [], // Images ou tableau vide
+          };
+        })
+      );
+  
+      // Retourner la liste des articles avec leurs catégories et images
+      res.status(200).json(articlesWithDetails);
+    } catch (e) {
+      res.status(500).json({
+        message: 'Erreur lors de la récupération des articles',
+        erreur: e.message,
+      });
+    }
+  };
 
-module.exports = { createArticle, getArticles, getArticleById, updateArticle, deleteArticle,getNewArticle };
+  const UpdateRemiseAll=async()=>{
+    
+  }
+  
+
+module.exports = { createArticle, getArticles, getArticleById, updateArticle, deleteArticle,getNewArticle,getarticlesAdmin };

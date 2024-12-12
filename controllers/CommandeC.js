@@ -1,5 +1,5 @@
-const { Commande } = require('../models/Commande');
-
+const Commande  = require('../models/Commande');
+const  Client  = require('../models/Client');
 // Création d'une commande
 const createCommande = async (req, res) => {
   try {
@@ -64,4 +64,39 @@ const deleteCommande = async (req, res) => {
   }
 };
 
-module.exports = { createCommande, getCommandes, getCommandeById, updateCommande, deleteCommande };
+const getCommandeAdmin = async (req, res) => {
+  try {
+    // Récupérer toutes les commandes
+    const commandes = await Commande.findAll();
+    
+    if (commandes.length === 0) {
+      return res.status(404).json({ message: 'Aucune commande trouvée' });
+    }
+
+    // Récupérer les informations du client pour chaque commande
+    const commandesAvecClient = [];
+
+    for (const commande of commandes) {
+      // Trouver le client associé à cette commande
+      const client = await Client.findByPk(commande.idClient);
+      
+      if (client) {
+        const fullname=client.nom+" "+client.prenom
+        // Ajouter les informations du client à la commande
+        commandesAvecClient.push({
+          ...commande.toJSON(), // Convertir la commande en objet JSON
+          fullname
+        });
+      }
+    }
+
+    // Retourner la réponse avec les commandes et les informations des clients
+    res.status(200).json(commandesAvecClient);
+    
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ message: 'Erreur lors de la récupération des commandes' });
+  }
+};
+
+module.exports = { createCommande, getCommandes, getCommandeById, updateCommande, deleteCommande, getCommandeAdmin };

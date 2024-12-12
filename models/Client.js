@@ -20,6 +20,11 @@ const Client = sequelize.define('Client', {
     allowNull: false,
     unique: true
   },
+  numero: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
+  },
   motDePasse: {
     type: DataTypes.STRING,
     allowNull: false

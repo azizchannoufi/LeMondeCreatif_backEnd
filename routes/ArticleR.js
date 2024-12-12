@@ -5,14 +5,18 @@ const {
   getArticleById,
   updateArticle,
   deleteArticle,
-  getNewArticle
+  getNewArticle,
+  getarticlesAdmin
 } = require('../controllers/ArticleC');
+const  {
+  uploadArticleImages
+}= require('../Middleware/Cloudinary')
 
 const router = express.Router();
 
 // Créer un article
 router.post('/', createArticle);
-
+router .post('/upload',uploadArticleImages)
 // Lire tous les articles
 router.get('/', getArticles);
 
@@ -21,6 +25,7 @@ router.get('/byid/:id', getArticleById);
 
 // Lire les 6 dernier article
 router.get('/lastArticle',getNewArticle)
+router.get('/adminArticle',getarticlesAdmin)
 
 // Mettre à jour un article
 router.put('/:id', updateArticle);

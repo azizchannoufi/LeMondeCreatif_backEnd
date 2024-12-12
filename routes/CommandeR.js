@@ -4,7 +4,8 @@ const {
   getCommandes,
   getCommandeById,
   updateCommande,
-  deleteCommande
+  deleteCommande,
+  getCommandeAdmin
 } = require('../controllers/CommandeC');
 
 const router = express.Router();
@@ -14,6 +15,9 @@ router.post('/', createCommande);
 
 // Lire toutes les commandes
 router.get('/', getCommandes);
+
+// Lire toutes les commandes pour l'admin
+router.get('/admin', getCommandeAdmin);
 
 // Lire une commande par ID
 router.get('/:id', getCommandeById);

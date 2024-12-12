@@ -8,7 +8,8 @@ const ArticleCommande = require('./ArticleCommande');
 const Evenement = require('./Evenement');
 const Admin = require('./admin');
 const PromoCode = require('./PromoCode');
-
+const ImageArticle = require('./ImageArticle')
+const Remise=require('./Remise')
 // Définition des relations
 
 // Client et Commande (Un client peut passer plusieurs commandes)
@@ -34,7 +35,8 @@ Pack.hasMany(Article, {
   foreignKey: 'packId',
   // as: 'articles' // Alias for accessing articles related to a pack
 });
-
+Article.hasMany(ImageArticle, { foreignKey: 'articleId', as: 'images' });
+ImageArticle.belongsTo(Article, { foreignKey: 'articleId' });
 // Article belongs to one Pack
 Article.belongsTo(Pack, {
   foreignKey: 'packId',
@@ -62,5 +64,6 @@ module.exports = {
   Admin,
   PromoCode,
   Pack,
+  Remise,
   initConfigDatabase
 };
