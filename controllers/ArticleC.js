@@ -1,6 +1,8 @@
+const { where } = require('sequelize');
 const  Article  = require('../models/Article');
 const Categorie =require('../models/Categorie')
 const ImageArticle = require('../models/ImageArticle')
+const Remise =require('../models/Remise')
 // Création d'un article
 const createArticle = async (req, res) => {
   try {
@@ -114,9 +116,91 @@ const getNewArticle = async (req, res) => {
     }
   };
 
-  const UpdateRemiseAll=async()=>{
+  const UpdateRemiseAll = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const statusR=req.body.statusR
+
+      if(statusR){
+        // Trouver la remise
+        const remise = await Remise.findByPk(id);
+        if (!remise) {
+          return res.status(404).json({ message: 'Remise non trouvée' });
+        }
+        await remise.update({
+          status:"active"
+        })
+        const pourcentage = remise.pourcentageRemise;
     
+        // Trouver tous les articles
+        const articles = await Article.findAll();
+    
+        // Mettre à jour chaque article
+        for (const article of articles) {
+          const prixRemise = article.prix - (article.prix * pourcentage / 100);
+          await article.update({
+            enremise: true,
+            prix_remise: prixRemise
+          });
+      }
+
+      }else{
+         // Trouver tous les articles
+         const articles = await Article.findAll();
+           // Mettre à jour chaque article
+        for (const article of articles) {
+          await article.update({
+            enremise: false,
+          });
+        }
+        // Trouver la remise
+        const remise = await Remise.findByPk(id);
+        if (!remise) {
+          return res.status(404).json({ message: 'Remise non trouvée' });
+        }
+        await remise.update({
+          status:"inactive"
+        })
+      }
+  
+      res.status(200).json({ message: 'Mise à jour des articles effectuée avec succès' });
+  
+    } catch (error) {
+      res.status(500).json({ message: 'Erreur lors de la mise à jour des articles', error });
+    }
+  };
+  const getStatutRemise=async(req,res)=>{
+    try{
+      const article = await Article.findByPk(req.params.id);
+      if (article) {
+        const status=article.enremise
+        res.status(200).json({status});
+      } else {
+        res.status(404).json({ message: 'Article non trouvé' });
+      }
+    }catch(e){
+      res.status(500).json({ message: 'Erreur lors de la récupération du statut'})
+    }
   }
+  const getArticlesByCategAdmin = async (req, res) => {
+    try {
+      const idcateg = req.params.id;
+      const articles = await Article.findAll({
+        where: {
+          idCategorie: idcateg
+        },
+        attributes: ['id', 'titre'] // Sélection spécifique des colonnes
+      });
+  
+      if (articles.length > 0) {
+        res.status(200).json(articles);
+      } else {
+        res.status(404).json({ message: 'Aucun article trouvé' });
+      }
+    } catch (e) {
+      res.status(500).json({ message: 'Erreur lors de la récupération des articles par catégorie' });
+    }
+  };
   
 
-module.exports = { createArticle, getArticles, getArticleById, updateArticle, deleteArticle,getNewArticle,getarticlesAdmin };
+module.exports = { createArticle, getArticles, getArticleById, updateArticle, deleteArticle,getNewArticle,getarticlesAdmin,UpdateRemiseAll,getStatutRemise,getArticlesByCategAdmin };

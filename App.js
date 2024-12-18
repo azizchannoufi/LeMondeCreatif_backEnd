@@ -27,6 +27,7 @@ const startServer = async () => {
     const promoCodeRoutes = require('./routes/PromoCodeR');
     const evenementRoutes = require('./routes/EvenementR');
     const remiseRoutes= require ('./routes/RemiseR');
+    const packRoutes = require('./routes/PackR');
 
     // Utilisation des routes
     app.use('/api/clients', clientRoutes);
@@ -36,7 +37,8 @@ const startServer = async () => {
     app.use('/api/admins', adminRoutes);
     app.use('/api/promocodes', promoCodeRoutes);
     app.use('/api/evenements', evenementRoutes);
-    app.use('./api/remise',remiseRoutes)
+    app.use('/api/remise',remiseRoutes);
+    app.use('/api/pack',packRoutes);
     // Démarrage du serveur
     const PORT = process.env.PORT || 3002;
     app.listen(PORT, () => {

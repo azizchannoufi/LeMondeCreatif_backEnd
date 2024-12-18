@@ -18,7 +18,11 @@ const Pack = sequelize.define('Pack', {
     prix: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false
-    }
+    },
+    articles: {
+      type: DataTypes.JSON,  
+      allowNull: true
+  }
   }, {
     tableName: 'packs', // Nom explicite pour la table
     timestamps: true

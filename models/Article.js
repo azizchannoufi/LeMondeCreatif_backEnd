@@ -28,6 +28,14 @@ const Article = sequelize.define('Article', {
     allowNull: false,
     defaultValue: 0
   },
+  prix_remise: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false
+  },
+  enremise:{
+    type:DataTypes.BOOLEAN,
+    defaultValue:false
+  },
   totalEvaluations: {
     type: DataTypes.INTEGER,
     allowNull: false,
